@@ -1,14 +1,12 @@
 package ru.netology.doalayer.repository;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,11 +15,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Repository
-@RequiredArgsConstructor
 public class DataBaseRepository {
 
-    private final DataSource dataSource;
-    public String scriptFileName = "data.sql";
+    @Autowired
+    NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    String script;
+
+    public DataBaseRepository() {
+        this.script = read("myScript.sql");
+    }
 
     public static String read(String scriptFileName) {
         try (InputStream is = new ClassPathResource(scriptFileName).getInputStream();
@@ -32,12 +34,10 @@ public class DataBaseRepository {
         }
     }
 
-    public ResponseEntity<String> getProductName(String name) {
-        String script = read(scriptFileName);
-        NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+    public String getProductName(String name) {
         SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("name", "%" + name + "%");
         List<String> result = namedParameterJdbcTemplate.queryForList(script, namedParameters, String.class);
-        return result.isEmpty() ? ResponseEntity.ok("No results is found") : ResponseEntity.ok(result.get(0));
+        return result.isEmpty() ? "No results is found" : result.get(0);
     }
 
 }

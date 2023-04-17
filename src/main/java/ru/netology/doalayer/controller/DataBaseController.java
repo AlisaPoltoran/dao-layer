@@ -19,8 +19,6 @@ public class DataBaseController {
     @GetMapping("/products/fetch-product")
     @ResponseBody
     public ResponseEntity<String> getProductName(@RequestParam(name = "name") String name) {
-        return dataBaseService.getProductName(name);
+        return ResponseEntity.ok(dataBaseService.getProductName(name));
     }
-
-
 }

@@ -1,6 +1,5 @@
 package ru.netology.doalayer.service;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.netology.doalayer.repository.DataBaseRepository;
 
@@ -13,7 +12,7 @@ public class DataBaseService {
         this.dataBaseRepository = dataBaseRepository;
     }
 
-    public ResponseEntity<String> getProductName(String name) {
+    public String getProductName(String name) {
         return dataBaseRepository.getProductName(name);
     }
 }
