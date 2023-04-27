@@ -1,1 +1,0 @@
-SELECT product_name FROM homework.orders INNER JOIN homework.customers ON orders.customer_id = customers.id where lower(name) like lower(:name);
